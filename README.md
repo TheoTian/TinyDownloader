@@ -14,7 +14,7 @@ There is two ways to download.
 ## Getting started
 See the demo code.
 
-####CreateDownloader
+###CreateDownloader
 
 ```
 mDownloader = DownloaderFactory.create(DownloaderFactory.Type.MULTI_SEGMENT, task);
@@ -24,17 +24,17 @@ if (mDownloader != null) {
 }
 ```
 
-####StartDownloader
+###StartDownloader
 ```
 mDownloader.start();
 ```
 
-####PauseDownloader
+###PauseDownloader
 ```
 mDownloader.pause();
 ```
 
-####LoadDownloader
+###LoadDownloader
 
 load the data(from onSaveInstance()) to create downloader.
 
