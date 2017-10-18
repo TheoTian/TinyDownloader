@@ -72,11 +72,12 @@ public interface IDownloader {
         void onComplete(Task task, long total);
 
         /**
-         * 回调断点续传数据
-         * 在数据暂停时，进行回调
+         * callback resume data
+         * this will call after paused.
+         * you can use the data to load and continue download from paused position.
          *
          * @param task
-         * @param data 断点续传数据
+         * @param data resume data
          */
         void onSaveInstance(Task task, byte[] data);
     }

@@ -2,19 +2,24 @@
 [![license](http://img.shields.io/badge/license-BSD3-brightgreen.svg?style=flat)](./LICENSE)
 [![release](http://img.shields.io/badge/release-v1.0-brightgreen.svg?style=flat)]()
 
-This is a tiny downloader on Android, it just support http now. Will support more in the future.
+See [中文介绍](https://github.com/TheoTian/TinyDownloader/wiki/TinyDownloader%E4%BB%8B%E7%BB%8D)
+
+This is a tiny downloader on Android, it just support http now. Will support more in the future. 
 
 There is two ways to download.
 
 1.	Normal.
+	> Download bytes with one thread.
 
-2. Multi-Segments.
+2.  Multi-Segments.
+	> Divide the resource into multi segments.
+	> every segment has one thread to download.
 
 
 ## Getting started
-See the demo code.
+See the demo code to get details.
 
-###CreateDownloader
+#### CreateDownloader
 
 ```
 mDownloader = DownloaderFactory.create(DownloaderFactory.Type.MULTI_SEGMENT, task);
@@ -24,21 +29,21 @@ if (mDownloader != null) {
 }
 ```
 
-###StartDownloader
+#### StartDownloader
+
 ```
 mDownloader.start();
 ```
 
-###PauseDownloader
+#### PauseDownloader
 ```
 mDownloader.pause();
 ```
 
-###LoadDownloader
+#### LoadDownloader
 
-load the data(from onSaveInstance()) to create downloader.
-
-resume download from the saved data.
+Load the resume-data to create downloader.
+resume-data comes from onSaveInstance callback.
 
 ```
  mDownloader = DownloaderFactory.load(FileUtil.readFile(new File(mTempPath)));
@@ -46,8 +51,33 @@ resume download from the saved data.
      mDownloader.setListener(mDownloadListener);
  }
 ```
+#### DownloaderListener
+```
+interface DownloadListener {
 
+        void onCreated(Task task, SnifferInfo snifferInfo);
 
+        void onStart(Task task);
+
+        void onPause(Task task);
+
+        void onProgress(Task task, long total, long down);
+
+        void onError(Task task, int error, String msg);
+
+        void onComplete(Task task, long total);
+
+        /**
+         * callback resume-data
+         * this will call after paused.
+         * you can use the data to load and continue download from paused position.
+         *
+         * @param task
+         * @param data resume data
+         */
+        void onSaveInstance(Task task, byte[] data);
+    }
+```
 
 ## Support
 Any problem?
