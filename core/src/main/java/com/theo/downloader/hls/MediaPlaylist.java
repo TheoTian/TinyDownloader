@@ -30,25 +30,61 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.theo.downloader;
+package com.theo.downloader.hls;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import java.util.LinkedList;
+import java.util.List;
 
-public class HLSDownloader extends AbstractDownloader {
+/**
+ * MediaPlaylist
+ *
+ * @author: theotian
+ * @since: 17/10/24
+ * @describe:
+ */
+public class MediaPlaylist extends Playlist {
 
-    @Override
-    protected void download(Task task) {
+    private LinkedList<Segment> segments = new LinkedList<>();
 
+    public MediaPlaylist(String uri) {
+        super(uri);
+        type = Type.MEDIA;
     }
 
-    @Override
-    protected byte getFlag() {
-        return IDownloader.TYPE_HLS_DOWNLOADER;
+    public static class Segment {
+        private String uri;
+
+        public Segment(String uri) {
+            this.uri = uri;
+        }
+
+        public String getUri() {
+            return uri;
+        }
+
+        public Segment setUri(String uri) {
+            this.uri = uri;
+            return this;
+        }
     }
 
-    @Override
-    protected void writeExInstance(OutputStream os) throws IOException {
+    public void add(Segment segment) {
+        segments.add(segment);
+    }
 
+    public Segment poll() {
+        return segments.poll();
+    }
+
+    public List<Segment> getList() {
+        return segments;
+    }
+
+    public boolean hasSegment() {
+        return segments.size() > 0;
+    }
+
+    public void clear() {
+        segments.clear();
     }
 }

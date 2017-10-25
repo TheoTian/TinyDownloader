@@ -117,7 +117,7 @@ public class DownloaderUtil {
      */
     public static ConnectionInfo createConnectionInfo(String urlStr) throws IOException {
         URL url = new URL(urlStr);
-        if (url == null || !url.getProtocol().equalsIgnoreCase("http")) {
+        if (url == null || (!url.getProtocol().equalsIgnoreCase("http") && !url.getProtocol().equalsIgnoreCase("https"))) {
             return null;
         }
         return new ConnectionInfo().setConnection(createConnection(url)).setUrl(url);

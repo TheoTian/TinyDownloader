@@ -30,57 +30,26 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.theo.downloader;
+package com.theo.downloader.util;
 
-import com.theo.downloader.hls.HLSDownloader;
-
-import java.nio.ByteBuffer;
-
-public class DownloaderFactory {
-
-    public enum Type {
-        NORMAL, MULTI_SEGMENT, HLS
+public class CharUtil {
+    /**
+     * Returns whether the given character is a carriage return ('\r') or a line feed ('\n').
+     *
+     * @param c The character.
+     * @return Whether the given character is a linebreak.
+     */
+    public static boolean isLinebreak(int c) {
+        return c == '\n' || c == '\r';
     }
 
     /**
-     * create downloader
+     * when read char to the end will get -1
      *
-     * @param type
-     * @param task
+     * @param c
      * @return
      */
-    public static IDownloader create(Type type, Task task) {
-        switch (type) {
-            case NORMAL:
-                return new NormalDownloader(task);
-            case MULTI_SEGMENT:
-                return new MultiSegmentDownloader(task);
-            case HLS:
-                return new HLSDownloader(task);
-        }
-        return new NormalDownloader(task);
+    public static boolean isEnd(int c) {
+        return c == -1;
     }
-
-    /**
-     * load downloader
-     *
-     * @param data 第一个字节为下载器类型标识 0 NormalDownloader
-     * @return
-     */
-    public static IDownloader load(byte[] data) {
-        if (data == null || data.length <= 0) {
-            return null;
-        }
-        ByteBuffer byteBuffer = ByteBuffer.wrap(data);
-        byte type = byteBuffer.get();
-        IDownloader downloader = null;
-        if (type == IDownloader.TYPE_NORMAL_DOWNLOADER) {
-            downloader = new NormalDownloader();
-        } else if (type == IDownloader.TYPE_MULTI_SEGMENT_DOWNLOADER) {
-            downloader = new MultiSegmentDownloader();
-        }
-        downloader.load(byteBuffer);
-        return downloader;
-    }
-
 }

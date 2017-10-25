@@ -92,7 +92,6 @@ public abstract class AbstractDownloader implements IDownloader {
     public int start() {
         if (task.getCurrentStatus() != Task.Status.CREATE
                 && task.getCurrentStatus() != Task.Status.PAUSE) {
-            cbOnError(ERROR, "task error status.must be created.");
             return ERROR;
         }
         task.setTargetStatus(Task.Status.DOWNLOADING);
@@ -104,7 +103,6 @@ public abstract class AbstractDownloader implements IDownloader {
     @Override
     public int pause() {
         if (task.getCurrentStatus() != Task.Status.DOWNLOADING) {
-            cbOnError(ERROR, "task error status.must be downloading.");
             return ERROR;
         }
         task.setTargetStatus(Task.Status.PAUSE);
@@ -137,14 +135,27 @@ public abstract class AbstractDownloader implements IDownloader {
         return task;
     }
 
-    protected void cbOnCreated(SnifferInfo snifferInfo) {
+    public void cbOnCreated(SnifferInfo snifferInfo) {
         task.updateStatus(Task.Status.CREATE);
         if (listener != null) {
             listener.onCreated(task, snifferInfo);
         }
     }
 
-    protected void cbOnStart() {
+    /**
+     * when error or complete not callback any event
+     *
+     * @return
+     */
+    public boolean isErrorOrComplete() {
+        return task.getCurrentStatus() == Task.Status.ERROR
+                || task.getCurrentStatus() == Task.Status.COMPLETE;
+    }
+
+    public void cbOnStart() {
+        if (isErrorOrComplete()) {
+            return;
+        }
         task.updateStatus(Task.Status.DOWNLOADING);
         if (calculator != null) {
             calculator.startCalculateDownSpeed();
@@ -154,7 +165,10 @@ public abstract class AbstractDownloader implements IDownloader {
         }
     }
 
-    protected void cbOnPause() {
+    public void cbOnPause() {
+        if (isErrorOrComplete()) {
+            return;
+        }
         task.updateStatus(Task.Status.PAUSE);
         if (listener != null) {
             listener.onPause(task);
@@ -185,7 +199,10 @@ public abstract class AbstractDownloader implements IDownloader {
 
     protected abstract void writeExInstance(OutputStream os) throws IOException;
 
-    protected void cbOnProgress(long total, long down) {
+    public void cbOnProgress(long total, long down) {
+        if (isErrorOrComplete()) {
+            return;
+        }
         task.setDownSize(down);
         if (calculator != null) {
             calculator.endCalculateDownSpeed();
@@ -196,21 +213,30 @@ public abstract class AbstractDownloader implements IDownloader {
         }
     }
 
-    protected void cbOnError(int error, String msg) {
+    public void cbOnError(int error, String msg) {
+        if (isErrorOrComplete()) {
+            return;
+        }
         task.updateStatus(Task.Status.ERROR);
         if (listener != null) {
             listener.onError(task, error, msg);
         }
     }
 
-    protected void cbOnComplete(long total) {
+    public void cbOnComplete(long total) {
+        if (isErrorOrComplete()) {
+            return;
+        }
         task.updateStatus(Task.Status.COMPLETE);
         if (listener != null) {
             listener.onComplete(task, total);
         }
     }
 
-    protected void cbOnSaveInstance(byte[] data) {
+    public void cbOnSaveInstance(byte[] data) {
+        if (isErrorOrComplete()) {
+            return;
+        }
         if (listener != null) {
             listener.onSaveInstance(task, data);
         }

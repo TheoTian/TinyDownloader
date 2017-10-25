@@ -56,6 +56,7 @@ public class Task implements Serializable{
     //文件目录将为dstDir/dstFile
     private String dstDir;//保存目标目录
     private String fileName;//保存目标文件
+    private String filePath;//file absolute path
 
 
     private long downSize;//已经下载bytes
@@ -169,6 +170,15 @@ public class Task implements Serializable{
 
     public Task setDownSpeed(long downSpeed) {
         this.downSpeed = downSpeed;
+        return this;
+    }
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public Task setFilePath(String filePath) {
+        this.filePath = filePath;
         return this;
     }
 

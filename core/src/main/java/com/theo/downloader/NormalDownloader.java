@@ -70,7 +70,10 @@ class NormalDownloader extends AbstractDownloader {
              */
             HttpURLConnection connection = connectionInfo.getConnection();
 
-            File outFile = new File(task.getDstDir() + "/" + task.getFileName());
+            String filePath = task.getDstDir() + "/" + task.getFileName();
+            task.setFilePath(filePath);
+            
+            File outFile = new File(filePath);
 
             long downSize = 0;
             boolean append = false;

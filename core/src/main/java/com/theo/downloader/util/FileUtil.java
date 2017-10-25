@@ -136,4 +136,18 @@ public class FileUtil {
         return data;
     }
 
+    /**
+     * rename file to new name
+     *
+     * @param file
+     * @param pathname
+     * @return
+     */
+    public static boolean rename(File file, String pathname) {
+        if (file == null) {
+            return false;
+        }
+        return file.renameTo(new File(pathname));
+    }
+
 }

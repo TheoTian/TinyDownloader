@@ -30,57 +30,74 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.theo.downloader;
+package com.theo.downloader.hls;
 
-import com.theo.downloader.hls.HLSDownloader;
+import java.io.BufferedReader;
+import java.util.Queue;
 
-import java.nio.ByteBuffer;
+/**
+ * LineReader
+ *
+ * @author: theotian
+ * @since: 17/10/24
+ * @describe:
+ */
+public class LineReader {
 
-public class DownloaderFactory {
+    private BufferedReader reader;
+    private Queue<String> extraLine;
+    private String next;
 
-    public enum Type {
-        NORMAL, MULTI_SEGMENT, HLS
+    public LineReader(Queue<String> extraLine, BufferedReader reader) {
+        this.extraLine = extraLine;
+        this.reader = reader;
     }
 
     /**
-     * create downloader
+     * whether have next line
      *
-     * @param type
-     * @param task
      * @return
      */
-    public static IDownloader create(Type type, Task task) {
-        switch (type) {
-            case NORMAL:
-                return new NormalDownloader(task);
-            case MULTI_SEGMENT:
-                return new MultiSegmentDownloader(task);
-            case HLS:
-                return new HLSDownloader(task);
+    public boolean hasNext() {
+        if (next != null) {
+            return true;
         }
-        return new NormalDownloader(task);
+        /**
+         * extraLine has next line
+         */
+        if (extraLine != null && extraLine.size() > 0) {
+            next = extraLine.poll();
+            return true;
+        }
+        /**
+         * read next from reader
+         */
+        try {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (!line.trim().isEmpty()) {
+                    next = line;
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            return false;
+        }
+
+        return false;
     }
 
     /**
-     * load downloader
+     * getNext Line
      *
-     * @param data 第一个字节为下载器类型标识 0 NormalDownloader
      * @return
      */
-    public static IDownloader load(byte[] data) {
-        if (data == null || data.length <= 0) {
-            return null;
+    public String getNext() {
+        if (hasNext()) {
+            String result = next;
+            next = null;
+            return result;
         }
-        ByteBuffer byteBuffer = ByteBuffer.wrap(data);
-        byte type = byteBuffer.get();
-        IDownloader downloader = null;
-        if (type == IDownloader.TYPE_NORMAL_DOWNLOADER) {
-            downloader = new NormalDownloader();
-        } else if (type == IDownloader.TYPE_MULTI_SEGMENT_DOWNLOADER) {
-            downloader = new MultiSegmentDownloader();
-        }
-        downloader.load(byteBuffer);
-        return downloader;
+        return null;
     }
-
 }

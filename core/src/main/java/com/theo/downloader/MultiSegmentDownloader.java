@@ -197,7 +197,10 @@ class MultiSegmentDownloader extends AbstractDownloader {
     protected void download(Task task) {
         long start = System.currentTimeMillis();
 
-        File dstFile = new File(task.getDstDir() + "/" + task.getFileName());
+        String filePath = task.getDstDir() + "/" + task.getFileName();
+        task.setFilePath(filePath);
+
+        File dstFile = new File(filePath);
         if (!FileUtil.checkAndCreateFile(dstFile)) {
             cbOnError(ERROR, "create file failed");
             return;

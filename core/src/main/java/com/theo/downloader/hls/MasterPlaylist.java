@@ -30,57 +30,19 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.theo.downloader;
+package com.theo.downloader.hls;
 
-import com.theo.downloader.hls.HLSDownloader;
+/**
+ * MasterPlaylist
+ *
+ * @author: theotian
+ * @since: 17/10/24
+ * @describe:
+ */
+public class MasterPlaylist extends Playlist {
 
-import java.nio.ByteBuffer;
-
-public class DownloaderFactory {
-
-    public enum Type {
-        NORMAL, MULTI_SEGMENT, HLS
+    public MasterPlaylist(String uri) {
+        super(uri);
+        type = Type.MASTER;
     }
-
-    /**
-     * create downloader
-     *
-     * @param type
-     * @param task
-     * @return
-     */
-    public static IDownloader create(Type type, Task task) {
-        switch (type) {
-            case NORMAL:
-                return new NormalDownloader(task);
-            case MULTI_SEGMENT:
-                return new MultiSegmentDownloader(task);
-            case HLS:
-                return new HLSDownloader(task);
-        }
-        return new NormalDownloader(task);
-    }
-
-    /**
-     * load downloader
-     *
-     * @param data 第一个字节为下载器类型标识 0 NormalDownloader
-     * @return
-     */
-    public static IDownloader load(byte[] data) {
-        if (data == null || data.length <= 0) {
-            return null;
-        }
-        ByteBuffer byteBuffer = ByteBuffer.wrap(data);
-        byte type = byteBuffer.get();
-        IDownloader downloader = null;
-        if (type == IDownloader.TYPE_NORMAL_DOWNLOADER) {
-            downloader = new NormalDownloader();
-        } else if (type == IDownloader.TYPE_MULTI_SEGMENT_DOWNLOADER) {
-            downloader = new MultiSegmentDownloader();
-        }
-        downloader.load(byteBuffer);
-        return downloader;
-    }
-
 }
