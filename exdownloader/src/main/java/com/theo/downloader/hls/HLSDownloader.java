@@ -53,6 +53,7 @@ import java.util.List;
 public class HLSDownloader extends AbstractDownloader {
 
     private PlaylistDownloader downloader;
+    private MediaPlaylistTask mediaPlaylistTask;
 
     public HLSDownloader() {
         super();
@@ -161,7 +162,7 @@ public class HLSDownloader extends AbstractDownloader {
             }
 
             if (playlist.getType() == Playlist.Type.MEDIA) {
-                MediaPlaylistTask mediaPlaylistTask = new MediaPlaylistTask((MediaPlaylist) playlist, file.getParentFile().getAbsolutePath());
+                mediaPlaylistTask = new MediaPlaylistTask((MediaPlaylist) playlist, file.getParentFile().getAbsolutePath());
                 downloader = new PlaylistDownloader(this, mediaPlaylistTask);
                 downloader.download();
             }

@@ -42,7 +42,6 @@ import com.theo.downloader.info.SnifferInfo;
  *
  * @author: theotian
  * @since: 17/10/25
- * @describe:
  */
 public class PlaylistDownloader {
 

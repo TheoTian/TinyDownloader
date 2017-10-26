@@ -44,10 +44,11 @@ import java.net.URL;
 public class DownloaderUtil {
 
     /**
-     * get the resource realUrl & contentLength
+     * get the resource realUrl and contentLength
      * must run in the sub thread
      *
-     * @param url
+     * @param url sniffer url
+     * @return sniffer info
      */
     public static SnifferInfo sniffer(String url) {
         SnifferInfo snifferInfo = new SnifferInfo();
@@ -82,9 +83,9 @@ public class DownloaderUtil {
     /**
      * create connection
      *
-     * @param url
-     * @return
-     * @throws IOException
+     * @param url connect url
+     * @return connection created connection. error will return null
+     * @throws IOException ioexcetpion
      */
     public static HttpURLConnection createConnection(String url) throws IOException {
         if (url == null || url.trim().equalsIgnoreCase("")) {
@@ -111,8 +112,8 @@ public class DownloaderUtil {
     /**
      * create connection info
      *
-     * @param urlStr
-     * @return
+     * @param urlStr connect url
+     * @return connection info
      * @throws IOException
      */
     public static ConnectionInfo createConnectionInfo(String urlStr) throws IOException {

@@ -18,7 +18,7 @@ import java.io.FileOutputStream;
 
 public class MainActivity extends AppCompatActivity {
 
-    private final String mUrl = "http://pcdownyf.titan.mgtv.com/c1/2017/09/18_0/C0082670368E8061AFE6206771B12CD1_20170918_1_1_457.mp4?arange=0&pm=9L62WFw7GhRMTI_rmHm2zpJ43L0aJs314SkN8IXPvFeCFKcN39JJQLUbG8VZepztvHPq8v0NL~sOzeTc3s42kI8rRXEiuMGMiGygSo6VkzIvuTbFdeNTeGQoGeH0qpLXWeR3TGPt1fakHlur2mqs_zeejrmuZoTtUR9WfnVHqZcrTXHcEEupo54vAqi_rllzCgVy_EBa4XvjcogrWP2vhgEzJMbonEBZQsBdInU_1rAVE92qc0YIcj86JB6gZJluOaOcqJSjvxeGBW3iSrSzVgn8lRhhq41q2szl~P6r5HHH~zagRhHJR~iJX6U3VGSQgFvhHb6Muqg8dI_23hasTCHBynhdwJxGis_8PSb~ZRbQGGr3Zg~IkG9rqjktnxcM~PZCn40v3WUcpICNlH2bB1DqWQU-";
+    private final String mUrl = "https://html5demos.com/assets/dizzy.mp4";
     private String mTempPath;
 
     private IDownloader mDownloader;

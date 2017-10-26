@@ -125,7 +125,7 @@ public abstract class AbstractDownloader implements IDownloader {
      * <p>
      * running in the thread
      *
-     * @param task
+     * @param task task need to download
      */
     protected abstract void download(Task task);
 
@@ -145,7 +145,7 @@ public abstract class AbstractDownloader implements IDownloader {
     /**
      * when error or complete not callback any event
      *
-     * @return
+     * @return is error or complete status
      */
     public boolean isErrorOrComplete() {
         return task.getCurrentStatus() == Task.Status.ERROR

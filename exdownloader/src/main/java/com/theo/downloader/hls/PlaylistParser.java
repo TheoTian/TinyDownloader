@@ -46,7 +46,7 @@ import java.util.Queue;
  *
  * @author: theotian
  * @since: 17/10/24
- * @describe:
+ *
  */
 public class PlaylistParser {
 
@@ -92,9 +92,9 @@ public class PlaylistParser {
     /**
      * parse the data from input stream
      *
-     * @param is
-     * @return
-     * @throws IOException
+     * @param is inputstream
+     * @return playlist media playlist or master playlist
+     * @throws IOException IOException
      */
     public Playlist parse(final String uri, final InputStream is) throws IOException {
 

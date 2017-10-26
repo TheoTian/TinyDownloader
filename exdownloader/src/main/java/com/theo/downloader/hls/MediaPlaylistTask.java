@@ -34,6 +34,7 @@ package com.theo.downloader.hls;
 
 import com.theo.downloader.Task;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -43,9 +44,8 @@ import java.util.Queue;
  *
  * @author: theotian
  * @since: 17/10/25
- * @describe:
  */
-public class MediaPlaylistTask {
+public class MediaPlaylistTask implements Serializable {
 
     /**
      * save directory
@@ -75,6 +75,12 @@ public class MediaPlaylistTask {
      */
     private long completeSize = 0;
 
+    /**
+     *
+     */
+    private int tasksCount = 0;
+
+
     public MediaPlaylistTask(MediaPlaylist mediaPlaylist, String savePath) {
         this.savePath = savePath;
         inflateWaitingTaskList(mediaPlaylist);
@@ -87,6 +93,7 @@ public class MediaPlaylistTask {
         if (mediaPlaylist == null || mediaPlaylist.getList().size() <= 0) {
             return;
         }
+        tasksCount = mediaPlaylist.getList().size();
         /**
          * first inflate waiting task
          */
@@ -161,6 +168,15 @@ public class MediaPlaylistTask {
      */
     public List<Task> getCompelteList() {
         return completeList;
+    }
+
+    /**
+     * get tasks count
+     *
+     * @return
+     */
+    public int getTasksCount() {
+        return tasksCount;
     }
 
 }

@@ -99,7 +99,7 @@ public class Task implements Serializable{
     }
 
     /**
-     * update target status & current status
+     * update target status and current status
      *
      * @param status
      * @return

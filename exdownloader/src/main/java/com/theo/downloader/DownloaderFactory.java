@@ -30,48 +30,57 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package com.theo.downloader.hls;
+package com.theo.downloader;
 
-import java.io.Serializable;
+import com.theo.downloader.hls.HLSDownloader;
 
-/**
- * Playlist
- *
- * @author: theotian
- * @since: 17/10/24
- * @describe:
- */
-public abstract class Playlist implements Serializable {
+import java.nio.ByteBuffer;
+
+public class DownloaderFactory {
+
+    public enum Type {
+        NORMAL, MULTI_SEGMENT, HLS
+    }
 
     /**
-     * playlist type
+     * create downloader
+     *
+     * @param type NORMAL MULTI_SEGMENT HLS
+     * @param task download task
+     * @return downloader instance
      */
-    public enum Type {
-        MASTER, MEDIA
+    public static IDownloader create(Type type, Task task) {
+        switch (type) {
+            case NORMAL:
+                return new NormalDownloader(task);
+            case MULTI_SEGMENT:
+                return new MultiSegmentDownloader(task);
+            case HLS:
+                return new HLSDownloader(task);
+        }
+        return new NormalDownloader(task);
     }
 
-    protected String baseUri;
-    protected Type type;
-
-    public Playlist(String uri) {
-        this.baseUri = uri;
+    /**
+     * load downloader
+     *
+     * @param data 第一个字节为下载器类型标识 0 NormalDownloader
+     * @return load downloader instance
+     */
+    public static IDownloader load(byte[] data) {
+        if (data == null || data.length <= 0) {
+            return null;
+        }
+        ByteBuffer byteBuffer = ByteBuffer.wrap(data);
+        byte type = byteBuffer.get();
+        IDownloader downloader = null;
+        if (type == IDownloader.TYPE_NORMAL_DOWNLOADER) {
+            downloader = new NormalDownloader();
+        } else if (type == IDownloader.TYPE_MULTI_SEGMENT_DOWNLOADER) {
+            downloader = new MultiSegmentDownloader();
+        }
+        downloader.load(byteBuffer);
+        return downloader;
     }
 
-    public String getBaseUri() {
-        return baseUri;
-    }
-
-    public Playlist setBaseUri(String baseUri) {
-        this.baseUri = baseUri;
-        return this;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public Playlist setType(Type type) {
-        this.type = type;
-        return this;
-    }
 }
