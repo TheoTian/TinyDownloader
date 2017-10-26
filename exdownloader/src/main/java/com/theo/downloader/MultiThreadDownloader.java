@@ -46,7 +46,7 @@ import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.nio.ByteBuffer;
 
-class MultiSegmentDownloader extends AbstractDownloader {
+class MultiThreadDownloader extends AbstractDownloader {
 
     /**
      * 分段
@@ -103,9 +103,9 @@ class MultiSegmentDownloader extends AbstractDownloader {
         private Segment segment;
         private int index;//segments index
         private File dstFile;
-        private MultiSegmentDownloader downloader;
+        private MultiThreadDownloader downloader;
 
-        public SegmentRunner(MultiSegmentDownloader downloader, int index, File dstFile) {
+        public SegmentRunner(MultiThreadDownloader downloader, int index, File dstFile) {
             this.downloader = downloader;
             this.url = downloader.task.getRealUrl();
             this.index = index;
@@ -185,11 +185,11 @@ class MultiSegmentDownloader extends AbstractDownloader {
         }
     }
 
-    public MultiSegmentDownloader() {
+    public MultiThreadDownloader() {
         super();
     }
 
-    public MultiSegmentDownloader(Task task) {
+    public MultiThreadDownloader(Task task) {
         super(task);
     }
 
@@ -240,8 +240,7 @@ class MultiSegmentDownloader extends AbstractDownloader {
     @Override
     public int load(ByteBuffer data) {
         super.load(data);
-        int segsObjSize = data.getInt();
-        byte[] segsBytes = new byte[segsObjSize];
+        byte[] segsBytes = new byte[data.getInt()];
         data.get(segsBytes);
         segments = (Segments) ByteUtil.readObjectFromBytes(segsBytes);
         return OK;

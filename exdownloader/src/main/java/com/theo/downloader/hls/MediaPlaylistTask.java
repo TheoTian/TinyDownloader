@@ -76,7 +76,7 @@ public class MediaPlaylistTask implements Serializable {
     private long completeSize = 0;
 
     /**
-     *
+     * all tasks count
      */
     private int tasksCount = 0;
 
@@ -97,8 +97,10 @@ public class MediaPlaylistTask implements Serializable {
         /**
          * first inflate waiting task
          */
+        int index = 0;
         for (MediaPlaylist.Segment segment : mediaPlaylist.getList()) {
-            waitingList.add(new Task(segment.getUri(), segment.getUri(), savePath));
+            waitingList.add(new Task(segment.getUri(), segment.getUri(), savePath).setIndex(index));
+            index++;
         }
     }
 

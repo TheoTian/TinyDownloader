@@ -39,13 +39,13 @@ import java.nio.ByteBuffer;
 public class DownloaderFactory {
 
     public enum Type {
-        NORMAL, MULTI_SEGMENT, HLS
+        NORMAL, MULTI_THREAD, HLS
     }
 
     /**
      * create downloader
      *
-     * @param type NORMAL MULTI_SEGMENT HLS
+     * @param type NORMAL MULTI_THREAD HLS
      * @param task download task
      * @return downloader instance
      */
@@ -53,8 +53,8 @@ public class DownloaderFactory {
         switch (type) {
             case NORMAL:
                 return new NormalDownloader(task);
-            case MULTI_SEGMENT:
-                return new MultiSegmentDownloader(task);
+            case MULTI_THREAD:
+                return new MultiThreadDownloader(task);
             case HLS:
                 return new HLSDownloader(task);
         }
@@ -77,7 +77,9 @@ public class DownloaderFactory {
         if (type == IDownloader.TYPE_NORMAL_DOWNLOADER) {
             downloader = new NormalDownloader();
         } else if (type == IDownloader.TYPE_MULTI_SEGMENT_DOWNLOADER) {
-            downloader = new MultiSegmentDownloader();
+            downloader = new MultiThreadDownloader();
+        } else if (type == IDownloader.TYPE_HLS_DOWNLOADER) {
+            downloader = new HLSDownloader();
         }
         downloader.load(byteBuffer);
         return downloader;

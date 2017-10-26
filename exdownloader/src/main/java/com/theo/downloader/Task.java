@@ -37,7 +37,7 @@ import com.theo.downloader.util.HashUtil;
 
 import java.io.Serializable;
 
-public class Task implements Serializable{
+public class Task implements Serializable {
 
     /**
      * 任务状态
@@ -61,6 +61,8 @@ public class Task implements Serializable{
 
     private long downSize;//已经下载bytes
     private long downSpeed;//byte/s
+
+    private int index;//task index
 
     public Task(String url, String dstDir) {
         this.url = url;
@@ -184,5 +186,14 @@ public class Task implements Serializable{
 
     public boolean isDownloading() {
         return currentStatus == Status.DOWNLOADING;
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public Task setIndex(int index) {
+        this.index = index;
+        return this;
     }
 }

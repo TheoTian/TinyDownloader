@@ -36,11 +36,22 @@ import com.theo.downloader.AbstractDownloader;
 import com.theo.downloader.DownloaderUtil;
 import com.theo.downloader.IDownloader;
 import com.theo.downloader.Task;
+import com.theo.downloader.util.ByteUtil;
 import com.theo.downloader.util.FileUtil;
 import com.theo.downloader.util.IOUtil;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.nio.ByteBuffer;
 import java.util.List;
 
 /**
@@ -52,8 +63,9 @@ import java.util.List;
  */
 public class HLSDownloader extends AbstractDownloader {
 
-    private PlaylistDownloader downloader;
+    private MediaPlaylistDownloader downloader;
     private MediaPlaylistTask mediaPlaylistTask;
+    private DownloadListener mMediaSegmentListener;
 
     public HLSDownloader() {
         super();
@@ -61,6 +73,10 @@ public class HLSDownloader extends AbstractDownloader {
 
     public HLSDownloader(Task task) {
         super(task);
+    }
+
+    public void setMediaSegmentListener(DownloadListener mediaSegmentListener) {
+        this.mMediaSegmentListener = mediaSegmentListener;
     }
 
     @Override
@@ -163,7 +179,7 @@ public class HLSDownloader extends AbstractDownloader {
 
             if (playlist.getType() == Playlist.Type.MEDIA) {
                 mediaPlaylistTask = new MediaPlaylistTask((MediaPlaylist) playlist, file.getParentFile().getAbsolutePath());
-                downloader = new PlaylistDownloader(this, mediaPlaylistTask);
+                downloader = createDownloader();
                 downloader.download();
             }
 
@@ -172,6 +188,17 @@ public class HLSDownloader extends AbstractDownloader {
         } finally {
             IOUtil.safeClose(is);
         }
+    }
+
+    /**
+     * createDownloader
+     *
+     * @return
+     */
+    private MediaPlaylistDownloader createDownloader() {
+        MediaPlaylistDownloader downloader = new MediaPlaylistDownloader(this, mediaPlaylistTask);
+        downloader.setMediaSegmentListener(mMediaSegmentListener);
+        return downloader;
     }
 
     @Override
@@ -187,8 +214,20 @@ public class HLSDownloader extends AbstractDownloader {
     }
 
     @Override
-    protected void writeExInstance(OutputStream os) throws IOException {
+    public int load(ByteBuffer data) {
+        super.load(data);
+        byte[] dataBytes = new byte[data.getInt()];
+        data.get(dataBytes);
+        mediaPlaylistTask = (MediaPlaylistTask) ByteUtil.readObjectFromBytes(dataBytes);
+        downloader = createDownloader();
+        return OK;
+    }
 
+    @Override
+    protected void writeExInstance(OutputStream os) throws IOException {
+        byte[] dataBytes = ByteUtil.writeObjectToBytes(mediaPlaylistTask);
+        os.write(ByteUtil.cast(dataBytes.length));
+        os.write(dataBytes);
     }
 
     /**
@@ -245,5 +284,12 @@ public class HLSDownloader extends AbstractDownloader {
             IOUtil.safeClose(writer);
         }
 
+    }
+
+    public int getTasksCount() {
+        if (mediaPlaylistTask != null) {
+            return mediaPlaylistTask.getTasksCount();
+        }
+        return 0;
     }
 }

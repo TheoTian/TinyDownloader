@@ -8,7 +8,7 @@ There is two ways to download.
 
 1.	Normal.
 
-2. Multi-Segments.
+2. Multi-Thread.
 
 
 ## Getting started

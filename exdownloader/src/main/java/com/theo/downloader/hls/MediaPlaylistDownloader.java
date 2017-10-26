@@ -38,24 +38,29 @@ import com.theo.downloader.Task;
 import com.theo.downloader.info.SnifferInfo;
 
 /**
- * PlaylistDownloader
+ * MediaPlaylistDownloader
  *
  * @author: theotian
  * @since: 17/10/25
  */
-public class PlaylistDownloader {
+public class MediaPlaylistDownloader {
 
     private HLSDownloader hlsDownloader;
     private MediaPlaylistTask taskList;
     private IDownloader downloader;
+    private IDownloader.DownloadListener mediaSegmentListener;//sub segment listener
+
     private boolean autoStart = true;
     private boolean paused = false;
 
     IDownloader.DownloadListener listener = new IDownloader.DownloadListener() {
         @Override
         public void onCreated(Task task, SnifferInfo snifferInfo) {
-            System.out.println("PlaylistDownloader onCreated realUrl:" + snifferInfo.realUrl);
-            System.out.println("PlaylistDownloader onCreated contentLength:" + snifferInfo.contentLength);
+            System.out.println("MediaPlaylistDownloader onCreated realUrl:" + snifferInfo.realUrl);
+            System.out.println("MediaPlaylistDownloader onCreated contentLength:" + snifferInfo.contentLength);
+            if (mediaSegmentListener != null) {
+                mediaSegmentListener.onCreated(task, snifferInfo);
+            }
             if (paused) {
                 if (hlsDownloader != null) {
                     hlsDownloader.cbOnPause();
@@ -69,25 +74,36 @@ public class PlaylistDownloader {
 
         @Override
         public void onStart(Task task) {
-            System.out.println("PlaylistDownloader onStart");
+            if (mediaSegmentListener != null) {
+                mediaSegmentListener.onStart(task);
+            }
+            System.out.println("MediaPlaylistDownloader onStart");
         }
 
         @Override
         public void onPause(Task task) {
+            if (mediaSegmentListener != null) {
+                mediaSegmentListener.onPause(task);
+            }
             if (hlsDownloader != null) {
                 hlsDownloader.cbOnPause();
             }
-            System.out.println("PlaylistDownloader onPause");
+            System.out.println("MediaPlaylistDownloader onPause");
         }
 
         @Override
         public void onProgress(Task task, long total, long down) {
-//                System.out.println("onProgress [" + total + "," + down + "]");
+            if (mediaSegmentListener != null) {
+                mediaSegmentListener.onProgress(task, total, down);
+            }
         }
 
         @Override
         public void onError(Task task, int error, String msg) {
-            System.out.println("PlaylistDownloader onError [" + error + "," + msg + "]");
+            System.out.println("MediaPlaylistDownloader onError [" + error + "," + msg + "]");
+            if (mediaSegmentListener != null) {
+                mediaSegmentListener.onError(task, error, msg);
+            }
             if (hlsDownloader != null) {
                 hlsDownloader.cbOnError(error, msg);
             }
@@ -95,10 +111,13 @@ public class PlaylistDownloader {
 
         @Override
         public void onComplete(Task task, long total) {
-            System.out.println("PlaylistDownloader onComplete [" + total + "]");
+            System.out.println("MediaPlaylistDownloader onComplete [" + total + "]");
+            if (mediaSegmentListener != null) {
+                mediaSegmentListener.onComplete(task, total);
+            }
             taskList.throwTaskToComplete(task);
             if (taskList.allComplete()) {
-                System.out.println("PlaylistDownloader all task onComplete [" + total + "]");
+                System.out.println("MediaPlaylistDownloader all task onComplete [" + total + "]");
                 if (hlsDownloader != null) {
                     hlsDownloader.updateM3U8URI(taskList);
                     hlsDownloader.cbOnComplete(taskList.getCompleteSize());
@@ -110,12 +129,12 @@ public class PlaylistDownloader {
 
         @Override
         public void onSaveInstance(Task task, byte[] data) {
-            System.out.println("PlaylistDownloader onSaveInstance data.length:" + data.length);
+            System.out.println("MediaPlaylistDownloader onSaveInstance data.length:" + data.length);
         }
 
     };
 
-    public PlaylistDownloader(HLSDownloader hlsDownloader, MediaPlaylistTask taskList) {
+    public MediaPlaylistDownloader(HLSDownloader hlsDownloader, MediaPlaylistTask taskList) {
         this.hlsDownloader = hlsDownloader;
         this.taskList = taskList;
     }
@@ -159,4 +178,9 @@ public class PlaylistDownloader {
             e.printStackTrace();
         }
     }
+
+    public void setMediaSegmentListener(IDownloader.DownloadListener mediaSegmentListener) {
+        this.mediaSegmentListener = mediaSegmentListener;
+    }
+
 }

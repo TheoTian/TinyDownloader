@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void onCreateClick() {
         Task task = new Task(mEtUrl.getText().toString(), mEtUrl.getText().toString(), getExternalCacheDir().getAbsolutePath());
-        mDownloader = DownloaderFactory.create(DownloaderFactory.Type.MULTI_SEGMENT, task);
+        mDownloader = DownloaderFactory.create(DownloaderFactory.Type.MULTI_THREAD, task);
         if (mDownloader != null) {
             mDownloader.setListener(mDownloadListener);
             mDownloader.create();
