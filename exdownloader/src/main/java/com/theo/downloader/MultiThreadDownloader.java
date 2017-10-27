@@ -234,7 +234,7 @@ class MultiThreadDownloader extends AbstractDownloader {
 
     @Override
     protected byte getFlag() {
-        return IDownloader.TYPE_MULTI_SEGMENT_DOWNLOADER;
+        return IDownloader.TYPE_MULTI_THREAD_DOWNLOADER;
     }
 
     @Override
@@ -244,6 +244,11 @@ class MultiThreadDownloader extends AbstractDownloader {
         data.get(segsBytes);
         segments = (Segments) ByteUtil.readObjectFromBytes(segsBytes);
         return OK;
+    }
+
+    @Override
+    public Type getType() {
+        return Type.MULTI_THREAD;
     }
 
     /**

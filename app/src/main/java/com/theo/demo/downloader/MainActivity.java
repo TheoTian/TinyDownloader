@@ -27,23 +27,45 @@ public class MainActivity extends AppCompatActivity {
     private EditText mEtUrl;
     private TextView mTvResult;
 
+    /**
+     * downloader listener
+     */
     private IDownloader.DownloadListener mDownloadListener = new IDownloader.DownloadListener() {
+        /**
+         * when download task created.after sniffer the net
+         * @param task
+         * @param snifferInfo
+         */
         @Override
         public void onCreated(Task task, SnifferInfo snifferInfo) {
             System.out.println("onCreated realUrl:" + snifferInfo.realUrl);
             System.out.println("onCreated contentLength:" + snifferInfo.contentLength);
         }
 
+        /**
+         * task start to download
+         * @param task
+         */
         @Override
         public void onStart(Task task) {
             System.out.println("onStart");
         }
 
+        /**
+         * task pause to download
+         * @param task
+         */
         @Override
         public void onPause(Task task) {
             System.out.println("onPause");
         }
 
+        /**
+         * download progress
+         * @param task task
+         * @param total total bytes ps: HLS type not support this progress.use {@link com.theo.downloader.hls.HLSDownloader#setMediaSegmentListener(IDownloader.DownloadListener)}
+         * @param down bytes down
+         */
         @Override
         public void onProgress(final Task task, final long total, final long down) {
             RunnableUtil.runOnUIThread(new Runnable() {
@@ -55,11 +77,22 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
+        /**
+         * throw error
+         * @param task
+         * @param error
+         * @param msg
+         */
         @Override
         public void onError(Task task, int error, String msg) {
             System.out.println("onError [" + error + "," + msg + "]");
         }
 
+        /**
+         * task complete
+         * @param task
+         * @param total
+         */
         @Override
         public void onComplete(final Task task, long total) {
             System.out.println("onComplete [" + total + "]");
@@ -76,6 +109,11 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
+        /**
+         * save the instance.when you wanna continue download next time.
+         * @param task
+         * @param data 断点续传数据
+         */
         @Override
         public void onSaveInstance(Task task, byte[] data) {
             saveInstanceToFile(new File(mTempPath), data);
@@ -127,7 +165,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void onCreateClick() {
         Task task = new Task(mEtUrl.getText().toString(), mEtUrl.getText().toString(), getExternalCacheDir().getAbsolutePath());
-        mDownloader = DownloaderFactory.create(DownloaderFactory.Type.MULTI_THREAD, task);
+        mDownloader = DownloaderFactory.create(IDownloader.Type.MULTI_THREAD, task);
         if (mDownloader != null) {
             mDownloader.setListener(mDownloadListener);
             mDownloader.create();
@@ -174,7 +212,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 自己做转换，这里只做粗略的转换
+     * convert yourself
      *
      * @param speed
      */

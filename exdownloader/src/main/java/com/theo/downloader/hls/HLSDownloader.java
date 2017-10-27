@@ -209,6 +209,11 @@ public class HLSDownloader extends AbstractDownloader {
     }
 
     @Override
+    public Type getType() {
+        return Type.HLS;
+    }
+
+    @Override
     protected byte getFlag() {
         return IDownloader.TYPE_HLS_DOWNLOADER;
     }

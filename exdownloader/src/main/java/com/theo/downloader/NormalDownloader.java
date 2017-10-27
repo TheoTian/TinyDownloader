@@ -158,4 +158,9 @@ class NormalDownloader extends AbstractDownloader {
     protected void writeExInstance(OutputStream os) {
 
     }
+
+    @Override
+    public Type getType() {
+        return Type.NORMAL;
+    }
 }

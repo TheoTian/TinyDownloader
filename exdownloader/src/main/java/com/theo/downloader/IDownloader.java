@@ -39,8 +39,12 @@ import java.nio.ByteBuffer;
 
 public interface IDownloader {
 
+    enum Type {
+        NORMAL, MULTI_THREAD, HLS
+    }
+
     byte TYPE_NORMAL_DOWNLOADER = 0;
-    byte TYPE_MULTI_SEGMENT_DOWNLOADER = 1;
+    byte TYPE_MULTI_THREAD_DOWNLOADER = 1;
     byte TYPE_HLS_DOWNLOADER = 2;
 
     int OK = 0;
@@ -56,6 +60,8 @@ public interface IDownloader {
     int pause();
 
     int delete();
+
+    Type getType();
 
     interface DownloadListener {
 
