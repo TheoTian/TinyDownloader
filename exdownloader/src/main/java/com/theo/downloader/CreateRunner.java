@@ -73,10 +73,11 @@ public class CreateRunner implements Runnable {
             return false;
         }
 
-        downloader.cbOnCreated(snifferInfo);
         task.setTotalSize(NumberUtil.parseInt(snifferInfo.contentLength));
         task.setRealUrl(snifferInfo.realUrl);
         task.setFileName(UrlUtil.getFileName(snifferInfo.realUrl));
+
+        downloader.cbOnCreated(snifferInfo);
         return true;
     }
 }

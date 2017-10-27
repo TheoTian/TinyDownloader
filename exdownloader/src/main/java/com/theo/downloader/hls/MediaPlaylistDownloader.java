@@ -47,7 +47,7 @@ public class MediaPlaylistDownloader {
 
     private HLSDownloader hlsDownloader;
     private MediaPlaylistTask taskList;
-    private IDownloader downloader;
+    private IDownloader segmentDownloader;
     private IDownloader.DownloadListener mediaSegmentListener;//sub segment listener
 
     private boolean autoStart = true;
@@ -67,8 +67,8 @@ public class MediaPlaylistDownloader {
                     return;
                 }
             }
-            if (autoStart && downloader != null) {
-                downloader.start();
+            if (autoStart && segmentDownloader != null) {
+                segmentDownloader.start();
             }
         }
 
@@ -139,18 +139,31 @@ public class MediaPlaylistDownloader {
         this.taskList = taskList;
     }
 
+    /**
+     * start download
+     */
     public void download() {
         paused = false;
-        if (downloader != null) {
-            downloader.start();
+
+        if (segmentDownloader != null) {
+            segmentDownloader.start();
         } else {
-            pop2Download();
+            Task task;
+            if (taskList != null && (task = taskList.getFirstDownloadTask()) != null) {
+                segmentDownloader = createSegmentDownloader(task);
+                if (task.getCurrentStatus() == Task.Status.PAUSE
+                        || task.getCurrentStatus() == Task.Status.CREATE) {
+                    segmentDownloader.start();
+                }
+            } else {
+                pop2Download();
+            }
         }
     }
 
     public void pause() {
-        if (downloader != null) {
-            downloader.pause();
+        if (segmentDownloader != null) {
+            segmentDownloader.pause();
             paused = true;
         } else {
             paused = true;
@@ -170,13 +183,25 @@ public class MediaPlaylistDownloader {
             return;
         }
 
+        segmentDownloader = createSegmentDownloader(task);
+        segmentDownloader.create();
+    }
+
+    /**
+     * create segment downloader
+     *
+     * @param task
+     * @return
+     */
+    private IDownloader createSegmentDownloader(Task task) {
         try {
-            downloader = DownloaderFactory.create(DownloaderFactory.Type.NORMAL, task);
+            IDownloader downloader = DownloaderFactory.create(DownloaderFactory.Type.NORMAL, task);
             downloader.setListener(listener);
-            downloader.create();
+            return downloader;
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     public void setMediaSegmentListener(IDownloader.DownloadListener mediaSegmentListener) {

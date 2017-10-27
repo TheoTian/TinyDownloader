@@ -164,6 +164,18 @@ public class MediaPlaylistTask implements Serializable {
     }
 
     /**
+     * get first download task
+     *
+     * @return
+     */
+    public Task getFirstDownloadTask() {
+        if (hasDownloadTask()) {
+            return downloadList.getFirst();
+        }
+        return null;
+    }
+
+    /**
      * get download list
      *
      * @return
