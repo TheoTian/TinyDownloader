@@ -1,5 +1,5 @@
 ## TinyDownloader
-[![license](http://img.shields.io/badge/license-BSD3-brightgreen.svg?style=flat)](./LICENSE)
+[![license](http://img.shields.io/badge/license-BSD3-brightgreen.svg?style=flat)](https://raw.githubusercontent.com/TheoTian/TinyDownloader/dev/LICENSE)
 [![release](http://img.shields.io/badge/release-v1.0-brightgreen.svg?style=flat)]()
 
 This is a tiny downloader on Android, it just support Http & Https & HLS download now. Will support more in the future.
@@ -12,11 +12,30 @@ There is two ways to download.
 
 3. HLS 
 
+##Quick Import
+
+You could also choose quick way to import my exdownloader library into your project.
+
+### Gradle
+```
+compile 'com.theo:exdownloader:1.1.0'
+```
+
+### Maven
+```
+<dependency>
+  <groupId>com.theo</groupId>
+  <artifactId>exdownloader</artifactId>
+  <version>1.1.0</version>
+  <type>pom</type>
+</dependency>
+```
 
 ## Getting started
 See the demo code.
 
-###CreateDownloader
+
+### CreateDownloader
 
 ```
 mDownloader = DownloaderFactory.create(DownloaderFactory.Type.MULTI_SEGMENT, task);
@@ -26,17 +45,17 @@ if (mDownloader != null) {
 }
 ```
 
-###StartDownloader
+### StartDownloader
 ```
 mDownloader.start();
 ```
 
-###PauseDownloader
+### PauseDownloader
 ```
 mDownloader.pause();
 ```
 
-###LoadDownloader
+### LoadDownloader
 
 load the data(from onSaveInstance()) to create downloader.
 
@@ -54,10 +73,11 @@ resume download from the saved data.
 ## Support
 Any problem?
 
-Contact me for help.
+Welcome to contact me for help.
+
 
 ## License
-Tinker is under the BSD license. See the [LICENSE](./LICENSE) file for details.
+Tinker is under the BSD license. See the [LICENSE](https://raw.githubusercontent.com/TheoTian/TinyDownloader/dev/LICENSE) file for details.
 
 ## Preview
 ### Normal & MultiThread
