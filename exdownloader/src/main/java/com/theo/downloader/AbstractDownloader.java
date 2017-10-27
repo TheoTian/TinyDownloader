@@ -35,6 +35,7 @@ package com.theo.downloader;
 
 import com.theo.downloader.info.SnifferInfo;
 import com.theo.downloader.util.ByteUtil;
+import com.theo.downloader.util.Messager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -118,6 +119,11 @@ public abstract class AbstractDownloader implements IDownloader {
     @Override
     public void setListener(DownloadListener l) {
         listener = l;
+    }
+
+    @Override
+    public void setMessageListener(Messager.MessageListener l) {
+        Messager.bindMessageHandler(l);
     }
 
     /**

@@ -36,6 +36,7 @@ package com.theo.downloader;
 import com.theo.downloader.util.ByteUtil;
 import com.theo.downloader.util.FileUtil;
 import com.theo.downloader.util.IOUtil;
+import com.theo.downloader.util.Messager;
 
 import java.io.File;
 import java.io.IOException;
@@ -130,7 +131,7 @@ class MultiThreadDownloader extends AbstractDownloader {
                 }
 
                 connection.setRequestProperty("range", "bytes=" + segment.down + "-" + segment.end);
-                System.out.println("bytes=" + segment.down + "-" + segment.end);
+                Messager.out("bytes=" + segment.down + "-" + segment.end);
 
                 connection.connect();
                 if (connection.getResponseCode() == HttpURLConnection.HTTP_OK
@@ -172,7 +173,7 @@ class MultiThreadDownloader extends AbstractDownloader {
 
                     segment.status = Segment.Status.COMPLETE;//段下载完成
 
-                    System.out.println("segment[" + index + "] download complete\n");
+                    Messager.out("segment[" + index + "] download complete\n");
                 }
 
             } catch (Exception e) {
@@ -195,7 +196,6 @@ class MultiThreadDownloader extends AbstractDownloader {
 
     @Override
     protected void download(Task task) {
-        long start = System.currentTimeMillis();
 
         String filePath = task.getDstDir() + "/" + task.getFileName();
         task.setFilePath(filePath);
@@ -228,8 +228,6 @@ class MultiThreadDownloader extends AbstractDownloader {
         }
 
         checkProgress();
-
-        System.out.println("download all complete\n cost:" + (System.currentTimeMillis() - start));
     }
 
     @Override

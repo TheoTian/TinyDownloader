@@ -34,6 +34,7 @@ package com.theo.downloader;
 
 
 import com.theo.downloader.info.SnifferInfo;
+import com.theo.downloader.util.Messager;
 
 import java.nio.ByteBuffer;
 
@@ -88,4 +89,11 @@ public interface IDownloader {
     }
 
     void setListener(DownloadListener l);
+
+    /**
+     * add message listener
+     *
+     * @param l
+     */
+    void setMessageListener(Messager.MessageListener l);
 }

@@ -35,6 +35,7 @@ package com.theo.downloader;
 import com.theo.downloader.info.ConnectionInfo;
 import com.theo.downloader.util.FileUtil;
 import com.theo.downloader.util.IOUtil;
+import com.theo.downloader.util.Messager;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -86,7 +87,7 @@ class NormalDownloader extends AbstractDownloader {
                 FileUtil.delete(outFile);//if size not fit. delete it.
             }
 
-            System.out.println("download downSize:" + downSize + ",fileSize:" + outFile.length() + ",append:" + append);
+            Messager.out("download downSize:" + downSize + ",fileSize:" + outFile.length() + ",append:" + append);
 
             connection.connect();
             /**
@@ -128,7 +129,7 @@ class NormalDownloader extends AbstractDownloader {
                     return;
                 }
 
-                System.out.println("download all complete\n cost:" + (System.currentTimeMillis() - start));
+                Messager.out("download all complete\n cost:" + (System.currentTimeMillis() - start));
 
                 cbOnComplete(outFile.length());
                 return;
@@ -136,7 +137,7 @@ class NormalDownloader extends AbstractDownloader {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            System.out.println("disconnect connection");
+            Messager.out("disconnect connection");
             if (connectionInfo != null && connectionInfo.getConnection() != null) {
                 connectionInfo.getConnection().disconnect();
             }

@@ -36,6 +36,7 @@ import com.theo.downloader.DownloaderFactory;
 import com.theo.downloader.IDownloader;
 import com.theo.downloader.Task;
 import com.theo.downloader.info.SnifferInfo;
+import com.theo.downloader.util.Messager;
 
 /**
  * MediaPlaylistDownloader
@@ -56,8 +57,8 @@ public class MediaPlaylistDownloader {
     IDownloader.DownloadListener listener = new IDownloader.DownloadListener() {
         @Override
         public void onCreated(Task task, SnifferInfo snifferInfo) {
-            System.out.println("MediaPlaylistDownloader onCreated realUrl:" + snifferInfo.realUrl);
-            System.out.println("MediaPlaylistDownloader onCreated contentLength:" + snifferInfo.contentLength);
+            Messager.out("MediaPlaylistDownloader onCreated realUrl:" + snifferInfo.realUrl);
+            Messager.out("MediaPlaylistDownloader onCreated contentLength:" + snifferInfo.contentLength);
             if (mediaSegmentListener != null) {
                 mediaSegmentListener.onCreated(task, snifferInfo);
             }
@@ -77,7 +78,7 @@ public class MediaPlaylistDownloader {
             if (mediaSegmentListener != null) {
                 mediaSegmentListener.onStart(task);
             }
-            System.out.println("MediaPlaylistDownloader onStart");
+            Messager.out("MediaPlaylistDownloader onStart");
         }
 
         @Override
@@ -88,7 +89,7 @@ public class MediaPlaylistDownloader {
             if (hlsDownloader != null) {
                 hlsDownloader.cbOnPause();
             }
-            System.out.println("MediaPlaylistDownloader onPause");
+            Messager.out("MediaPlaylistDownloader onPause");
         }
 
         @Override
@@ -100,7 +101,7 @@ public class MediaPlaylistDownloader {
 
         @Override
         public void onError(Task task, int error, String msg) {
-            System.out.println("MediaPlaylistDownloader onError [" + error + "," + msg + "]");
+            Messager.out("MediaPlaylistDownloader onError [" + error + "," + msg + "]");
             if (mediaSegmentListener != null) {
                 mediaSegmentListener.onError(task, error, msg);
             }
@@ -111,13 +112,13 @@ public class MediaPlaylistDownloader {
 
         @Override
         public void onComplete(Task task, long total) {
-            System.out.println("MediaPlaylistDownloader onComplete [" + total + "]");
+            Messager.out("MediaPlaylistDownloader onComplete [" + total + "]");
             if (mediaSegmentListener != null) {
                 mediaSegmentListener.onComplete(task, total);
             }
             taskList.throwTaskToComplete(task);
             if (taskList.allComplete()) {
-                System.out.println("MediaPlaylistDownloader all task onComplete [" + total + "]");
+                Messager.out("MediaPlaylistDownloader all task onComplete [" + total + "]");
                 if (hlsDownloader != null) {
                     hlsDownloader.updateM3U8URI(taskList);
                     hlsDownloader.cbOnComplete(taskList.getCompleteSize());
@@ -129,7 +130,7 @@ public class MediaPlaylistDownloader {
 
         @Override
         public void onSaveInstance(Task task, byte[] data) {
-            System.out.println("MediaPlaylistDownloader onSaveInstance data.length:" + data.length);
+            Messager.out("MediaPlaylistDownloader onSaveInstance data.length:" + data.length);
         }
 
     };
@@ -195,7 +196,7 @@ public class MediaPlaylistDownloader {
      */
     private IDownloader createSegmentDownloader(Task task) {
         try {
-            IDownloader downloader = DownloaderFactory.create(DownloaderFactory.Type.NORMAL, task);
+            IDownloader downloader = DownloaderFactory.create(IDownloader.Type.NORMAL, task);
             downloader.setListener(listener);
             return downloader;
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 package com.theo.demo.downloader;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -125,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mTempPath = getExternalCacheDir().getAbsolutePath() + "/bundle.tmp";
+        mTempPath = getExternalCacheDir().getAbsolutePath() + "/bundle.tmp";//you should save the path to Persistence way like DB or file
         initView();
     }
 
@@ -161,6 +162,16 @@ public class MainActivity extends AppCompatActivity {
         mEtUrl.setText(mUrl);
 
         mTvResult = (TextView) findViewById(R.id.tvResult);
+        findViewById(R.id.tvGotoHLS).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gotoHLSDemo();
+            }
+        });
+    }
+
+    private void gotoHLSDemo() {
+        startActivity(new Intent(this, HLSActivity.class));
     }
 
     private void onCreateClick() {

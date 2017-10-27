@@ -34,6 +34,7 @@ package com.theo.downloader.hls;
 
 import com.theo.downloader.util.CharUtil;
 import com.theo.downloader.util.IOUtil;
+import com.theo.downloader.util.Messager;
 
 import java.io.*;
 import java.net.MalformedURLException;
@@ -168,7 +169,7 @@ public class PlaylistParser {
                     segUrl = hostpath + "/" + line;
                 }
 
-                System.out.println(segUrl);
+                Messager.out(segUrl);
                 playlist.add(new MediaPlaylist.Segment(segUrl));
             }
         }

@@ -62,8 +62,8 @@
             android:id="@+id/tvDownSpeed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0 KB/S"
-            android:layout_gravity="center_horizontal"/>
+            android:layout_gravity="center_horizontal"
+            android:text="0 KB/S"/>
 
         <ProgressBar
             android:id="@+id/pbProgress"
@@ -75,8 +75,15 @@
         <TextView
             android:id="@+id/tvResult"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="100dp"
             android:layout_marginTop="5dp"/>
 
+        <Button
+            android:id="@+id/tvGotoHLS"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="5dp"
+            android:text="Goto HLS Demo"/>
     </LinearLayout>
 </RelativeLayout>

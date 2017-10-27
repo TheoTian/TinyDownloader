@@ -39,17 +39,9 @@ import com.theo.downloader.Task;
 import com.theo.downloader.util.ByteUtil;
 import com.theo.downloader.util.FileUtil;
 import com.theo.downloader.util.IOUtil;
+import com.theo.downloader.util.Messager;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.nio.ByteBuffer;
 import java.util.List;
@@ -280,7 +272,7 @@ public class HLSDownloader extends AbstractDownloader {
             FileUtil.rename(srcFile, srcFile.getAbsolutePath() + ".old");
             FileUtil.rename(dstFile, originName);
 
-            System.out.println("updateM3U8URI cost:" + (System.currentTimeMillis() - start));
+            Messager.out("updateM3U8URI cost:" + (System.currentTimeMillis() - start));
         } catch (Exception e) {
             e.printStackTrace();
             cbOnError(ERROR, "updateM3U8URI failed");
