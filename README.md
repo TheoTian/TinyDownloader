@@ -2,13 +2,15 @@
 [![license](http://img.shields.io/badge/license-BSD3-brightgreen.svg?style=flat)](./LICENSE)
 [![release](http://img.shields.io/badge/release-v1.0-brightgreen.svg?style=flat)]()
 
-This is a tiny downloader on Android, it just support http now. Will support more in the future.
+This is a tiny downloader on Android, it just support Http & Https & HLS download now. Will support more in the future.
 
 There is two ways to download.
 
 1.	Normal.
 
 2. Multi-Thread.
+
+3. HLS 
 
 
 ## Getting started
@@ -58,5 +60,9 @@ Contact me for help.
 Tinker is under the BSD license. See the [LICENSE](./LICENSE) file for details.
 
 ## Preview
+### Normal & MultiThread
 <img src="asserts/show_demo.gif" width="180" height="320" alt="show_demo"/>
+
+### HLS
+<img src="asserts/show_hlsdemo.gif" width="180" height="320" alt="show_hlsdemo"/>
 
